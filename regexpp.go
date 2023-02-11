@@ -1,5 +1,6 @@
 package regexpp
 
-// https://tc39.es/ecma262/#prod-Pattern
-func ParsePattern(source string, u bool) {
+func ParsePattern(source string, u bool) any {
+	parser := NewParser(u)
+	return parser.ParsePattern()
 }
