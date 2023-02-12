@@ -1,7 +1,10 @@
 package regexpp
 
 type Tokenizer struct {
-	// 文字コードに関するユーティリティ
+	/*
+	 文字コードに関するユーティリティ
+	 ユニコードモードかどうかによって実装が異なる
+	 */
 	cu *CharCodeUtils
 
 	// 現在見ている位置
@@ -13,8 +16,10 @@ type Tokenizer struct {
 	// ソースの文字列
 	s string
 
-	// 現在のコードポイント
-	// ユニコードモードでない場合はコードユニットの場合もある
+	/*
+	 現在のコードポイント
+	 ユニコードモードでない場合はコードユニットの場合もある
+	 */
 	CP uint
 }
 
@@ -42,4 +47,12 @@ func (t *Tokenizer) Next() {
 	t.i = t.i + t.w
 	t.CP = (*t.cu).At(t.s, t.i)
 	t.w = (*t.cu).Width(t.CP)
+}
+
+func (t *Tokenizer) Eat(c uint) bool {
+	if t.CP == c {
+		t.Next()
+		return true
+	}
+	return false
 }
