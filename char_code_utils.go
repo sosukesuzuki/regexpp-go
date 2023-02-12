@@ -4,7 +4,7 @@ import (
 	"unicode/utf16"
 )
 
-type CharUtils interface {
+type CharCodeUtils interface {
 	At(s string, i int) uint
 	Width(c uint) int
 }
