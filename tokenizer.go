@@ -1,3 +1,3 @@
 package regexpp
 
-type Tokenizer struct {}
+type Tokenizer struct{}

@@ -5,7 +5,7 @@ type Parser struct {
 }
 
 func NewParser(u bool) Parser {
-	return Parser{ u: u }
+	return Parser{u: u}
 }
 
 // https://tc39.es/ecma262/#prod-Pattern
