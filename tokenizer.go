@@ -4,7 +4,7 @@ type Tokenizer struct {
 	/*
 	 文字コードに関するユーティリティ
 	 ユニコードモードかどうかによって実装が異なる
-	 */
+	*/
 	cu *CharCodeUtils
 
 	// 現在見ている位置
@@ -19,7 +19,7 @@ type Tokenizer struct {
 	/*
 	 現在のコードポイント
 	 ユニコードモードでない場合はコードユニットの場合もある
-	 */
+	*/
 	CP uint
 }
 
