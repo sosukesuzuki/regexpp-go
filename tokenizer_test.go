@@ -56,3 +56,76 @@ func TestNew(t *testing.T) {
 		})
 	}
 }
+
+func TestEat(t *testing.T) {
+	tests := []struct {
+		name         string
+		inputS       string
+		inputU       bool
+		inputCs      []uint
+		inputLoop    int
+		outputEatens []bool
+	}{
+		{
+			name:         "ユニコードモードで、`あいう`に対してそれぞれの文字コードがマッチし、Eat が true を返す",
+			inputS:       "あいう",
+			inputU:       true,
+			inputCs:      []uint{0x3042, 0x3044, 0x3046},
+			inputLoop:    2,
+			outputEatens: []bool{true, true, true},
+		},
+		{
+			name:         "非ユニコードモードで、`あいう`に対してそれぞれの文字コードがマッチし、Eat が true を返す",
+			inputS:       "あいう",
+			inputU:       false,
+			inputCs:      []uint{0x3042, 0x3044, 0x3046},
+			inputLoop:    2,
+			outputEatens: []bool{true, true, true},
+		},
+		{
+			name:         "ユニコードモードで、`あい𠮟`に対してそれぞれの文字コードがマッチし、Eat が true を返す",
+			inputS:       "あい𠮟",
+			inputU:       true,
+			inputCs:      []uint{0x3042, 0x3044, 0x20b9f},
+			inputLoop:    2,
+			outputEatens: []bool{true, true, true},
+		},
+		{
+			name:         "非ユニコードモードで、`あい𠮟`に対してそれぞれの文字コードがマッチし、Eat が true を返す",
+			inputS:       "あい𠮟",
+			inputU:       true,
+			inputCs:      []uint{0x3042, 0x3044, 0xd842, 0xdf9f},
+			inputLoop:    2,
+			outputEatens: []bool{true, true, true, true},
+		},
+		{
+			name:         "ユニコードモードで、`あいう`に対してそれぞれの文字コードに対してのみ Eat が true を返す",
+			inputS:       "あいう",
+			inputU:       true,
+			inputCs:      []uint{0x3042, 0x3044, 0x3048, 0x3046},
+			inputLoop:    3,
+			outputEatens: []bool{true, true, false, true},
+		},
+		{
+			name:         "非ユニコードモードで、`あいう`に対してそれぞれの文字コードに対してのみ Eat が true を返す",
+			inputS:       "あいう",
+			inputU:       false,
+			inputCs:      []uint{0x3042, 0x3044, 0x3048, 0x3046},
+			inputLoop:    3,
+			outputEatens: []bool{true, true, false, true},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tok := regexpp.NewTokenizer(tt.inputS, tt.inputU)
+			for i := 0; i < tt.inputLoop; i++ {
+				c := tt.inputCs[i]
+				e := tok.Eat(c)
+				if e != tt.outputEatens[i] {
+					t.Errorf("Unexpected CP, expected %t, actual %t", tt.outputEatens[i], e)
+				}
+			}
+		})
+	}
+}
