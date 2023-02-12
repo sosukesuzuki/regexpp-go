@@ -2,10 +2,13 @@ package regexpp
 
 type Parser struct {
 	u bool
+	t *Tokenizer
 }
 
-func NewParser(u bool) Parser {
-	return Parser{u: u}
+func NewParser(s string, u bool) Parser {
+	return Parser{
+		t: NewTokenizer(s, u),
+	}
 }
 
 // https://tc39.es/ecma262/#prod-Pattern

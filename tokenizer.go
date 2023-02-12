@@ -23,7 +23,7 @@ type Tokenizer struct {
 	CP uint
 }
 
-func NewTokenizer(s string, u bool) Tokenizer {
+func NewTokenizer(s string, u bool) *Tokenizer {
 	var cu CharCodeUtils
 	if u {
 		cu = &UnicodeCharUtils{}
@@ -34,7 +34,7 @@ func NewTokenizer(s string, u bool) Tokenizer {
 	i := 0
 	cp := cu.At(s, i)
 	w := cu.Width(cp)
-	return Tokenizer{
+	return &Tokenizer{
 		cu: &cu,
 		i:  i,
 		w:  w,
