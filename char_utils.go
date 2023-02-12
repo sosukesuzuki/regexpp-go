@@ -1,6 +1,8 @@
 package regexpp
 
-import "unicode/utf16"
+import (
+	"unicode/utf16"
+)
 
 type CharUtils interface {
 	At(s string, i int) uint
@@ -9,9 +11,8 @@ type CharUtils interface {
 
 type LegacyCharUtils struct{}
 
-func (u *LegacyCharUtils) At(s string, i int) uint16 {
-	// TODO: fix
-	return utf16.Encode([]rune(s))[i]
+func (u *LegacyCharUtils) At(s string, i int) uint {
+	return uint(utf16.Encode([]rune(s))[i])
 }
 func (u *LegacyCharUtils) Width(c uint) int {
 	return 1
@@ -19,8 +20,8 @@ func (u *LegacyCharUtils) Width(c uint) int {
 
 type UnicodeCharUtils struct{}
 
-func (u *UnicodeCharUtils) At(s string, i int) uint16 {
-	return utf16.Encode([]rune(s))[i]
+func (u *UnicodeCharUtils) At(s string, i int) uint {
+	return uint([]rune(s)[i])
 }
 func (u *UnicodeCharUtils) Width(c uint) int {
 	if c > 0xffff {

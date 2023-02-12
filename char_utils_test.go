@@ -36,14 +36,19 @@ func TestLegacyAt(t *testing.T) {
 		name       string
 		inputS     string
 		inputI     int
-		wantOutput uint16
+		wantOutput uint
 	}{
 		{
-			name:   "`う`のコードユニットを返す",
-			inputS: "あいうえお",
-			inputI: 2,
-			// code point of "う"
+			name:       "`う`のコードユニットを返す",
+			inputS:     "あいうえお",
+			inputI:     2,
 			wantOutput: 0x3046,
+		},
+		{
+			name:       "`𠮟`のサロゲートペアの前半部のコードユニットを返す",
+			inputS:     "あい𠮟えお",
+			inputI:     2,
+			wantOutput: 0xd842,
 		},
 	}
 
@@ -66,14 +71,12 @@ func TestUnicodeWidth(t *testing.T) {
 		wantOutput int
 	}{
 		{
-			name: "サロゲートペア以外では1を返す",
-			// "う"のコードポイント
+			name:       "サロゲートペア以外では1を返す",
 			input:      0x3046,
 			wantOutput: 1,
 		},
 		{
-			name: "サロゲートペアには2を返す",
-			// "𠮟"のコードポイント
+			name:       "サロゲートペアには2を返す",
 			input:      0x20b9f,
 			wantOutput: 2,
 		},
@@ -86,6 +89,39 @@ func TestUnicodeWidth(t *testing.T) {
 			w := u.Width(tt.input)
 			if w != tt.wantOutput {
 				t.Errorf("Unexpected width, expected %d, actual %d", tt.wantOutput, w)
+			}
+		})
+	}
+}
+
+func TestUnicodeAt(t *testing.T) {
+	tests := []struct {
+		name       string
+		inputS     string
+		inputI     int
+		wantOutput uint
+	}{
+		{
+			name:       "`う`のコードポイントを返す",
+			inputS:     "あいうえお",
+			inputI:     2,
+			wantOutput: 0x3046,
+		},
+		{
+			name:       "`𠮟`のコードポイントを返す",
+			inputS:     "あい𠮟えお",
+			inputI:     2,
+			wantOutput: 0x20b9f,
+		},
+	}
+
+	u := regexpp.UnicodeCharUtils{}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := u.At(tt.inputS, tt.inputI)
+			if w != tt.wantOutput {
+				t.Errorf("Unexpected at, expected %d, actual %d", tt.wantOutput, w)
 			}
 		})
 	}
