@@ -1,13 +1,13 @@
 package regexpp
 
 type Parser struct {
-	u bool
-	t *Tokenizer
+	u     bool
+	lexer *Lexer
 }
 
 func NewParser(s string, u bool) Parser {
 	return Parser{
-		t: NewTokenizer(s, u),
+		lexer: NewLexer(s, u),
 	}
 }
 

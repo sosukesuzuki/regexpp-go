@@ -1,6 +1,6 @@
 package regexpp
 
-type Tokenizer struct {
+type Lexer struct {
 	/*
 	 文字コードに関するユーティリティ
 	 ユニコードモードかどうかによって実装が異なる
@@ -23,7 +23,7 @@ type Tokenizer struct {
 	CP uint
 }
 
-func NewTokenizer(s string, u bool) *Tokenizer {
+func NewLexer(s string, u bool) *Lexer {
 	var cu CharCodeUtils
 	if u {
 		cu = &UnicodeCharUtils{}
@@ -34,7 +34,7 @@ func NewTokenizer(s string, u bool) *Tokenizer {
 	i := 0
 	cp := cu.At(s, i)
 	w := cu.Width(cp)
-	return &Tokenizer{
+	return &Lexer{
 		cu: &cu,
 		i:  i,
 		w:  w,
@@ -43,13 +43,13 @@ func NewTokenizer(s string, u bool) *Tokenizer {
 	}
 }
 
-func (t *Tokenizer) Next() {
+func (t *Lexer) Next() {
 	t.i = t.i + t.w
 	t.CP = (*t.cu).At(t.s, t.i)
 	t.w = (*t.cu).Width(t.CP)
 }
 
-func (t *Tokenizer) Eat(c uint) bool {
+func (t *Lexer) Eat(c uint) bool {
 	if t.CP == c {
 		t.Next()
 		return true
