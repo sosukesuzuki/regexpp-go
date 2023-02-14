@@ -12,16 +12,30 @@ func NewParser(s string, u bool) Parser {
 }
 
 // https://tc39.es/ecma262/#prod-Pattern
-func (p *Parser) ParsePattern() any {
+func (p *Parser) ParsePattern() Node {
 	return p.ParseDisjunction()
 }
 
 // https://tc39.es/ecma262/#prod-Disjunction
-func (p *Parser) ParseDisjunction() any {
-	return 3
+func (p *Parser) ParseDisjunction() Node {
+	node := p.ParseAlternative()
+	for {
+		if p.lexer.Eat(VerticalLine) {
+			start := p.lexer.I
+			node = Node{
+				Data: &NDisjunction{
+					Left:  node,
+					Right: p.ParseAlternative(),
+				},
+				Loc: Loc{start, p.lexer.I},
+			}
+		} else {
+			return node
+		}
+	}
 }
 
 // https://tc39.es/ecma262/#prod-Alternative
-func (p *Parser) ParseAlternative() any {
-	return 3
+func (p *Parser) ParseAlternative() Node {
+	return Node{}
 }

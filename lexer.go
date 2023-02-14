@@ -8,7 +8,7 @@ type Lexer struct {
 	cu *CharCodeUtils
 
 	// 現在見ている位置
-	i int
+	I int
 
 	// 現在見ている文字の width
 	w int
@@ -36,7 +36,7 @@ func NewLexer(s string, u bool) *Lexer {
 	w := cu.Width(cp)
 	return &Lexer{
 		cu: &cu,
-		i:  i,
+		I:  i,
 		w:  w,
 		s:  s,
 		CP: cp,
@@ -44,8 +44,8 @@ func NewLexer(s string, u bool) *Lexer {
 }
 
 func (t *Lexer) Next() {
-	t.i = t.i + t.w
-	t.CP = (*t.cu).At(t.s, t.i)
+	t.I = t.I + t.w
+	t.CP = (*t.cu).At(t.s, t.I)
 	t.w = (*t.cu).Width(t.CP)
 }
 

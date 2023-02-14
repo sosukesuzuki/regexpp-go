@@ -17,5 +17,6 @@ type N interface {
 func (n *NDisjunction) isNode() {}
 
 type NDisjunction struct {
-	elements []Node
+	Left  Node
+	Right Node
 }
