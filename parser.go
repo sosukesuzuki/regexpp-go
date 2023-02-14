@@ -39,3 +39,13 @@ func (p *Parser) ParseDisjunction() Node {
 func (p *Parser) ParseAlternative() Node {
 	return Node{}
 }
+
+// https://tc39.es/ecma262/#prod-Term
+func (p *Parser) ParseTerm() Node {
+	return Node{}
+}
+
+// https://tc39.es/ecma262/#prod-Atom
+func (p *Parser) ParseAtom() Node {
+	return Node{}
+}
