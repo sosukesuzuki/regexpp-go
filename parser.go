@@ -35,7 +35,10 @@ func (p *Parser) parseDisjunction() *Node {
 	}
 }
 
-// https://tc39.es/ecma262/#prod-Alternative
+/*
+  https://tc39.es/ecma262/#prod-Alternative
+  TODO: ループで書き直す
+*/
 func (p *Parser) parseAlternative() *Node {
 	if p.lexer.Match(Eof) {
 		return nil
