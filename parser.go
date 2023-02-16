@@ -12,17 +12,17 @@ func NewParser(s string, u bool) Parser {
 }
 
 // https://tc39.es/ecma262/#prod-Pattern
-func (p *Parser) ParsePattern() Node {
+func (p *Parser) ParsePattern() *Node {
 	return p.parseDisjunction()
 }
 
 // https://tc39.es/ecma262/#prod-Disjunction
-func (p *Parser) parseDisjunction() Node {
+func (p *Parser) parseDisjunction() *Node {
 	node := p.parseAlternative()
 	for {
 		if p.lexer.Eat(VerticalLine) {
 			start := p.lexer.I
-			node = Node{
+			node = &Node{
 				Data: &NDisjunction{
 					Left:  node,
 					Right: p.parseAlternative(),
@@ -36,8 +36,8 @@ func (p *Parser) parseDisjunction() Node {
 }
 
 // https://tc39.es/ecma262/#prod-Alternative
-func (p *Parser) parseAlternative() Node {
-	var node Node = Node{
+func (p *Parser) parseAlternative() *Node {
+	var node = &Node{
 		Data: &NAlternative{},
 		Loc:  Loc{p.lexer.I, p.lexer.I},
 	}
@@ -47,7 +47,7 @@ func (p *Parser) parseAlternative() Node {
 		}
 		start := p.lexer.I
 		node = p.parseTerm()
-		node = Node{
+		node = &Node{
 			Data: &NAlternative{
 				Left:  node,
 				Right: p.parseTerm(),
@@ -58,11 +58,11 @@ func (p *Parser) parseAlternative() Node {
 }
 
 // https://tc39.es/ecma262/#prod-Term
-func (p *Parser) parseTerm() Node {
+func (p *Parser) parseTerm() *Node {
 	return p.parseAtom()
 }
 
 // https://tc39.es/ecma262/#prod-Atom
-func (p *Parser) parseAtom() Node {
-	return Node{}
+func (p *Parser) parseAtom() *Node {
+	return &Node{}
 }

@@ -19,15 +19,15 @@ func (n *NAlternative) isNode() {}
 func (n *NAtom) isNode()        {}
 
 type NDisjunction struct {
-	Left  Node
-	Right Node
+	Left  *Node
+	Right *Node
 }
 
 type NAlternative struct {
-	Left  Node
-	Right Node
+	Left  *Node
+	Right *Node
 }
 
 type NAtom struct {
-	value Node
+	value *Node
 }
