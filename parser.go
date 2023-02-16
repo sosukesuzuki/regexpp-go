@@ -36,8 +36,8 @@ func (p *Parser) parseDisjunction() *Node {
 }
 
 /*
-  https://tc39.es/ecma262/#prod-Alternative
-  TODO: ループで書き直す
+https://tc39.es/ecma262/#prod-Alternative
+TODO: ループで書き直す
 */
 func (p *Parser) parseAlternative() *Node {
 	if p.lexer.Match(Eof) {
@@ -46,7 +46,7 @@ func (p *Parser) parseAlternative() *Node {
 	start := p.lexer.I
 	return &Node{
 		Data: &NAlternative{
-			Left: p.parseAlternative(),
+			Left:  p.parseAlternative(),
 			Right: p.parseTerm(),
 		},
 		Loc: Loc{start, p.lexer.I},
