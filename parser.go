@@ -37,7 +37,24 @@ func (p *Parser) ParseDisjunction() Node {
 
 // https://tc39.es/ecma262/#prod-Alternative
 func (p *Parser) ParseAlternative() Node {
-	return Node{}
+	var node Node = Node{
+		Data: &NAlternative{},
+		Loc:  Loc{p.lexer.I, p.lexer.I},
+	}
+	for {
+		if p.lexer.Match(Eof) {
+			return node
+		}
+		start := p.lexer.I
+		node = p.ParseTerm()
+		node = Node{
+			Data: &NAlternative{
+				Left:  node,
+				Right: p.ParseTerm(),
+			},
+			Loc: Loc{start, p.lexer.I},
+		}
+	}
 }
 
 // https://tc39.es/ecma262/#prod-Term

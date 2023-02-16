@@ -15,8 +15,14 @@ type N interface {
 }
 
 func (n *NDisjunction) isNode() {}
+func (n *NAlternative) isNode() {}
 
 type NDisjunction struct {
+	Left  Node
+	Right Node
+}
+
+type NAlternative struct {
 	Left  Node
 	Right Node
 }

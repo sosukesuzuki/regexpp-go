@@ -56,3 +56,7 @@ func (t *Lexer) Eat(c uint) bool {
 	}
 	return false
 }
+
+func (t *Lexer) Match(c uint) bool {
+	return t.CP == c
+}
