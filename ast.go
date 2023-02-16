@@ -16,6 +16,7 @@ type N interface {
 
 func (n *NDisjunction) isNode() {}
 func (n *NAlternative) isNode() {}
+func (n *NAtom) isNode()        {}
 
 type NDisjunction struct {
 	Left  Node
@@ -25,4 +26,8 @@ type NDisjunction struct {
 type NAlternative struct {
 	Left  Node
 	Right Node
+}
+
+type NAtom struct {
+	value Node
 }
