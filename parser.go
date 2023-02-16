@@ -42,7 +42,7 @@ func (p *Parser) ParseAlternative() Node {
 
 // https://tc39.es/ecma262/#prod-Term
 func (p *Parser) ParseTerm() Node {
-	return Node{}
+	return p.ParseAtom()
 }
 
 // https://tc39.es/ecma262/#prod-Atom
