@@ -6,7 +6,6 @@ import (
 	"github.com/sosukesuzuki/regexpp-go/internal/unicode_consts"
 )
 
-
 type Parser struct {
 	u     bool
 	lexer *lexer.Lexer
@@ -36,7 +35,7 @@ func (p *Parser) parseDisjunction() *regexp_ast.Node {
 				},
 				Loc: regexp_ast.Loc{
 					Start: start,
-					End: p.lexer.I,
+					End:   p.lexer.I,
 				},
 			}
 		} else {
@@ -61,7 +60,7 @@ func (p *Parser) parseAlternative() *regexp_ast.Node {
 		},
 		Loc: regexp_ast.Loc{
 			Start: start,
-			End: p.lexer.I,
+			End:   p.lexer.I,
 		},
 	}
 }
