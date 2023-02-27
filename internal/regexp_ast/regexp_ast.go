@@ -1,4 +1,4 @@
-package regexpp
+package regexp_ast
 
 type Node struct {
 	Data N
@@ -6,8 +6,8 @@ type Node struct {
 }
 
 type Loc struct {
-	start int
-	end   int
+	Start int
+	End   int
 }
 
 type N interface {

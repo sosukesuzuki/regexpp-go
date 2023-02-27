@@ -1,11 +1,13 @@
-package regexpp
+package lexer
+
+import "github.com/sosukesuzuki/regexpp-go/internal/char_code_utils"
 
 type Lexer struct {
 	/*
 	 文字コードに関するユーティリティ
 	 ユニコードモードかどうかによって実装が異なる
 	*/
-	cu *CharCodeUtils
+	cu *char_code_utils.CharCodeUtils
 
 	// 現在見ている位置
 	I int
@@ -24,11 +26,11 @@ type Lexer struct {
 }
 
 func NewLexer(s string, u bool) *Lexer {
-	var cu CharCodeUtils
+	var cu char_code_utils.CharCodeUtils
 	if u {
-		cu = &UnicodeCharUtils{}
+		cu = &char_code_utils.Unicode{}
 	} else {
-		cu = &LegacyCharUtils{}
+		cu = &char_code_utils.Legacy{}
 	}
 
 	i := 0

@@ -1,9 +1,9 @@
-package regexpp_test
+package lexer_test
 
 import (
 	"testing"
 
-	"github.com/sosukesuzuki/regexpp-go"
+	"github.com/sosukesuzuki/regexpp-go/internal/lexer"
 )
 
 func TestNew(t *testing.T) {
@@ -46,7 +46,7 @@ func TestNew(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tok := regexpp.NewLexer(tt.inputS, tt.inputU)
+			tok := lexer.NewLexer(tt.inputS, tt.inputU)
 			for i := 0; i < tt.inputLoop; i++ {
 				if tok.CP != tt.outputCPs[i] {
 					t.Errorf("Unexpected CP, expected %d, actual %d", tt.outputCPs[i], tok.CP)
@@ -118,7 +118,7 @@ func TestEat(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tok := regexpp.NewLexer(tt.inputS, tt.inputU)
+			tok := lexer.NewLexer(tt.inputS, tt.inputU)
 			for i := 0; i < tt.inputLoop; i++ {
 				c := tt.inputCs[i]
 				e := tok.Eat(c)

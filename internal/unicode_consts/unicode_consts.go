@@ -1,4 +1,4 @@
-package regexpp
+package unicode_consts
 
 const (
 	VerticalLine = 0x7c

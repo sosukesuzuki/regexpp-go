@@ -1,9 +1,9 @@
-package regexpp_test
+package char_code_utils_test
 
 import (
 	"testing"
 
-	"github.com/sosukesuzuki/regexpp-go"
+	"github.com/sosukesuzuki/regexpp-go/internal/char_code_utils"
 )
 
 func TestLegacyWidth(t *testing.T) {
@@ -19,7 +19,7 @@ func TestLegacyWidth(t *testing.T) {
 		},
 	}
 
-	u := regexpp.LegacyCharUtils{}
+	u := char_code_utils.Legacy{}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -52,7 +52,7 @@ func TestLegacyAt(t *testing.T) {
 		},
 	}
 
-	u := regexpp.LegacyCharUtils{}
+	u := char_code_utils.Legacy{}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -82,7 +82,7 @@ func TestUnicodeWidth(t *testing.T) {
 		},
 	}
 
-	u := regexpp.UnicodeCharUtils{}
+	u := char_code_utils.Unicode{}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -115,7 +115,7 @@ func TestUnicodeAt(t *testing.T) {
 		},
 	}
 
-	u := regexpp.UnicodeCharUtils{}
+	u := char_code_utils.Unicode{}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
