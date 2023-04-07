@@ -11,28 +11,27 @@ type Loc struct {
 }
 
 type N interface {
-	isNode()
+	isN()
 }
 
-func (n *NPattern) isNode()     {}
-func (n *NDisjunction) isNode() {}
-func (n *NAlternative) isNode() {}
-func (n *NAtom) isNode()        {}
+func (n *Pattern) isN()     {}
+func (n *Alternative) isN() {}
+func (n *Character) isN()   {}
 
-type NPattern struct {
-	Value *Node
+type Element interface {
+	isElement()
 }
 
-type NDisjunction struct {
-	Left  *Node
-	Right *Node
+func (n *Character) isElement() {}
+
+type Pattern struct {
+	Alternatives []Alternative
 }
 
-type NAlternative struct {
-	Left  *Node
-	Right *Node
+type Alternative struct {
+	Elements []Element
 }
 
-type NAtom struct {
-	Value *Node
+type Character struct {
+	value uint
 }
