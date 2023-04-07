@@ -30,7 +30,7 @@ type Element interface {
 func (n *Character) isElement() {}
 
 type Pattern struct {
-	Alternatives []Alternative
+	Alternatives []*Alternative
 	Loc          Loc
 }
 
