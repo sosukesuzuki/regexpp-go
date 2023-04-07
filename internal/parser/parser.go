@@ -157,7 +157,7 @@ func (p *Parser) consumeAtom() bool {
 
 func (p *Parser) consumeOptionalQuantifier() bool {
 	p.consumeQuantifier()
-	return false
+	return true 
 }
 
 func (p *Parser) consumeQuantifier() bool {
