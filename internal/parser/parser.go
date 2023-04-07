@@ -125,9 +125,39 @@ func (p *Parser) onAlternativeLeave(start int, end int) {
 
 //------------------------------------------------------------------------------
 // Term
-// https://tc39.es/ecma262/multipage/text-processing.html#prod-Alternative
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Term
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumeTerm() bool {
+	return p.consumeAssertion() || (p.consumeAtom() && p.consumeOptionalQuantifier())
+}
+
+//------------------------------------------------------------------------------
+// Assertion
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Assertion
+//------------------------------------------------------------------------------
+
+func (p *Parser) consumeAssertion() bool {
 	return true
 }
+
+//------------------------------------------------------------------------------
+// Atom
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Atom
+//------------------------------------------------------------------------------
+
+func (p *Parser) consumeAtom() bool {
+	return true
+}
+
+//------------------------------------------------------------------------------
+// Quantifier
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Quantifier
+//------------------------------------------------------------------------------
+
+func (p *Parser) consumeOptionalQuantifier() bool {
+	p.consumeQuantifier()
+	return true
+}
+
+func (p *Parser) consumeQuantifier() {}
