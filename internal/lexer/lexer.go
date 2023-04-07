@@ -22,7 +22,7 @@ type Lexer struct {
 	 現在のコードポイント
 	 ユニコードモードでない場合はコードユニットの場合もある
 	*/
-	CP uint
+	CP int
 }
 
 func NewLexer(s string, u bool) *Lexer {
@@ -51,7 +51,7 @@ func (t *Lexer) Next() {
 	t.w = (*t.cu).Width(t.CP)
 }
 
-func (t *Lexer) Eat(c uint) bool {
+func (t *Lexer) Eat(c int) bool {
 	if t.CP == c {
 		t.Next()
 		return true
@@ -59,6 +59,6 @@ func (t *Lexer) Eat(c uint) bool {
 	return false
 }
 
-func (t *Lexer) Match(c uint) bool {
+func (t *Lexer) Match(c int) bool {
 	return t.CP == c
 }

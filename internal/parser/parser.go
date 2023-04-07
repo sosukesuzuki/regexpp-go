@@ -29,6 +29,7 @@ func (p *Parser) ParsePattern() *regexp_ast.Pattern {
 
 //------------------------------------------------------------------------------
 // Pattern
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Pattern
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumePattern() {
@@ -54,6 +55,7 @@ func (p *Parser) onPatternLeave(start int, end int) {
 
 //------------------------------------------------------------------------------
 // Disjunction
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Disjunction
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumeDisjunction() {
@@ -82,12 +84,19 @@ func (p *Parser) onDisjunctionLeave(start int, end int) {
 
 //------------------------------------------------------------------------------
 // Alternative
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Alternative
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumeAlternative(index int) {
 	start := p.lexer.I
 
 	p.onAlternativeEnter(start)
+
+	for {
+		if p.lexer.CP == -1 || !p.consumeTerm() {
+			break
+		}
+	}
 
 	p.onAlternativeLeave(start, p.lexer.I)
 }
@@ -112,4 +121,13 @@ func (p *Parser) onAlternativeEnter(start int) {
 func (p *Parser) onAlternativeLeave(start int, end int) {
 	p.node.SetEnd(end)
 	p.node = p.node.GetParent()
+}
+
+//------------------------------------------------------------------------------
+// Term
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Alternative
+//------------------------------------------------------------------------------
+
+func (p *Parser) consumeTerm() bool {
+	return true
 }

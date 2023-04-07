@@ -9,7 +9,7 @@ import (
 func TestLegacyWidth(t *testing.T) {
 	tests := []struct {
 		name       string
-		input      uint
+		input      int
 		wantOutput int
 	}{
 		{
@@ -36,7 +36,7 @@ func TestLegacyAt(t *testing.T) {
 		name       string
 		inputS     string
 		inputI     int
-		wantOutput uint
+		wantOutput int
 	}{
 		{
 			name:       "`う`のコードユニットを返す",
@@ -67,7 +67,7 @@ func TestLegacyAt(t *testing.T) {
 func TestUnicodeWidth(t *testing.T) {
 	tests := []struct {
 		name       string
-		input      uint
+		input      int
 		wantOutput int
 	}{
 		{
@@ -99,7 +99,7 @@ func TestUnicodeAt(t *testing.T) {
 		name       string
 		inputS     string
 		inputI     int
-		wantOutput uint
+		wantOutput int
 	}{
 		{
 			name:       "`う`のコードポイントを返す",

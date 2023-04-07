@@ -12,35 +12,35 @@ func TestNew(t *testing.T) {
 		inputS    string
 		inputU    bool
 		inputLoop int
-		outputCPs []uint
+		outputCPs []int
 	}{
 		{
 			name:      "ユニコードモードで、2回 Next を呼び出したときに `あ`, `い`, `う` のコードポイントを CP で参照できる",
 			inputS:    "あいう",
 			inputU:    true,
 			inputLoop: 2,
-			outputCPs: []uint{0x3042, 0x3044, 0x3046},
+			outputCPs: []int{0x3042, 0x3044, 0x3046},
 		},
 		{
 			name:      "非ユニコードモードで、2回 Next を呼び出したときに `あ`, `い`, `う` のコードポイントを CP で参照できる",
 			inputS:    "あいう",
 			inputU:    false,
 			inputLoop: 2,
-			outputCPs: []uint{0x3042, 0x3044, 0x3046},
+			outputCPs: []int{0x3042, 0x3044, 0x3046},
 		},
 		{
 			name:      "ユニコードモードで、2回 Next を呼び出したときに `あ`, `い`, `𠮟` のコードポイントを CP で参照できる",
 			inputS:    "あい𠮟",
 			inputU:    true,
 			inputLoop: 2,
-			outputCPs: []uint{0x3042, 0x3044, 0x20b9f},
+			outputCPs: []int{0x3042, 0x3044, 0x20b9f},
 		},
 		{
 			name:      "非ユニコードモードで、3回 Next を呼び出したときに `あ`, `い`, `𠮟`の前半部, `𠮟`の後半部 のコードポイントを CP で参照できる",
 			inputS:    "あい𠮟",
 			inputU:    false,
 			inputLoop: 3,
-			outputCPs: []uint{0x3042, 0x3044, 0xd842, 0xdf9f},
+			outputCPs: []int{0x3042, 0x3044, 0xd842, 0xdf9f},
 		},
 	}
 
@@ -62,7 +62,7 @@ func TestEat(t *testing.T) {
 		name         string
 		inputS       string
 		inputU       bool
-		inputCs      []uint
+		inputCs      []int
 		inputLoop    int
 		outputEatens []bool
 	}{
@@ -70,7 +70,7 @@ func TestEat(t *testing.T) {
 			name:         "ユニコードモードで、`あいう`に対してそれぞれの文字コードがマッチし、Eat が true を返す",
 			inputS:       "あいう",
 			inputU:       true,
-			inputCs:      []uint{0x3042, 0x3044, 0x3046},
+			inputCs:      []int{0x3042, 0x3044, 0x3046},
 			inputLoop:    2,
 			outputEatens: []bool{true, true, true},
 		},
@@ -78,7 +78,7 @@ func TestEat(t *testing.T) {
 			name:         "非ユニコードモードで、`あいう`に対してそれぞれの文字コードがマッチし、Eat が true を返す",
 			inputS:       "あいう",
 			inputU:       false,
-			inputCs:      []uint{0x3042, 0x3044, 0x3046},
+			inputCs:      []int{0x3042, 0x3044, 0x3046},
 			inputLoop:    2,
 			outputEatens: []bool{true, true, true},
 		},
@@ -86,7 +86,7 @@ func TestEat(t *testing.T) {
 			name:         "ユニコードモードで、`あい𠮟`に対してそれぞれの文字コードがマッチし、Eat が true を返す",
 			inputS:       "あい𠮟",
 			inputU:       true,
-			inputCs:      []uint{0x3042, 0x3044, 0x20b9f},
+			inputCs:      []int{0x3042, 0x3044, 0x20b9f},
 			inputLoop:    2,
 			outputEatens: []bool{true, true, true},
 		},
@@ -94,7 +94,7 @@ func TestEat(t *testing.T) {
 			name:         "非ユニコードモードで、`あい𠮟`に対してそれぞれの文字コードがマッチし、Eat が true を返す",
 			inputS:       "あい𠮟",
 			inputU:       true,
-			inputCs:      []uint{0x3042, 0x3044, 0xd842, 0xdf9f},
+			inputCs:      []int{0x3042, 0x3044, 0xd842, 0xdf9f},
 			inputLoop:    2,
 			outputEatens: []bool{true, true, true, true},
 		},
@@ -102,7 +102,7 @@ func TestEat(t *testing.T) {
 			name:         "ユニコードモードで、`あいう`に対してそれぞれの文字コードに対してのみ Eat が true を返す",
 			inputS:       "あいう",
 			inputU:       true,
-			inputCs:      []uint{0x3042, 0x3044, 0x3048, 0x3046},
+			inputCs:      []int{0x3042, 0x3044, 0x3048, 0x3046},
 			inputLoop:    3,
 			outputEatens: []bool{true, true, false, true},
 		},
@@ -110,7 +110,7 @@ func TestEat(t *testing.T) {
 			name:         "非ユニコードモードで、`あいう`に対してそれぞれの文字コードに対してのみ Eat が true を返す",
 			inputS:       "あいう",
 			inputU:       false,
-			inputCs:      []uint{0x3042, 0x3044, 0x3048, 0x3046},
+			inputCs:      []int{0x3042, 0x3044, 0x3048, 0x3046},
 			inputLoop:    3,
 			outputEatens: []bool{true, true, false, true},
 		},
