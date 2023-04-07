@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"errors"
+
 	"github.com/sosukesuzuki/regexpp-go/internal/lexer"
 	"github.com/sosukesuzuki/regexpp-go/internal/regexp_ast"
 	"github.com/sosukesuzuki/regexpp-go/internal/unicode_consts"
@@ -11,6 +13,7 @@ type Parser struct {
 	lexer   *lexer.Lexer
 	pattern *regexp_ast.Pattern
 	node    regexp_ast.Node
+	errors  []error
 }
 
 func NewParser(s string, u bool) Parser {
@@ -22,9 +25,16 @@ func NewParser(s string, u bool) Parser {
 	}
 }
 
-func (p *Parser) ParsePattern() *regexp_ast.Pattern {
+func (p *Parser) ParsePattern() (*regexp_ast.Pattern, error) {
 	p.consumePattern()
-	return p.pattern
+	return p.pattern, errors.Join(p.errors...)
+}
+
+func (p *Parser) raise(msg string) {
+	p.errors = append(p.errors, &ParserError{
+		msg: msg,
+		err: nil,
+	})
 }
 
 //------------------------------------------------------------------------------
@@ -104,7 +114,7 @@ func (p *Parser) consumeAlternative(index int) {
 func (p *Parser) onAlternativeEnter(start int) {
 	parent, ok := p.node.(*regexp_ast.Pattern)
 	if !ok {
-		// TODO: raise an error
+		p.raise("The parent of Alternative must be Pattern")
 	}
 	alt := &regexp_ast.Alternative{
 		Elements: []regexp_ast.Element{},
