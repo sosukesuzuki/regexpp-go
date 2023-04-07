@@ -27,7 +27,9 @@ func (p *Parser) ParsePattern() *regexp_ast.Pattern {
 	return p.pattern
 }
 
+//------------------------------------------------------------------------------
 // Pattern
+//------------------------------------------------------------------------------
 
 func (p *Parser) consumePattern() {
 	start := p.lexer.I
@@ -50,7 +52,9 @@ func (p *Parser) onPatternLeave(start int, end int) {
 	p.node.SetEnd(end)
 }
 
+//------------------------------------------------------------------------------
 // Disjunction
+//------------------------------------------------------------------------------
 
 func (p *Parser) consumeDisjunction() {
 	start := p.lexer.I
@@ -76,7 +80,9 @@ func (p *Parser) onDisjunctionLeave(start int, end int) {
 	// do nothing
 }
 
+//------------------------------------------------------------------------------
 // Alternative
+//------------------------------------------------------------------------------
 
 func (p *Parser) consumeAlternative(index int) {}
 
