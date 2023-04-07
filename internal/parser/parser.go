@@ -138,7 +138,7 @@ func (p *Parser) consumeTerm() bool {
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumeAssertion() bool {
-	return true
+	return false
 }
 
 //------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ func (p *Parser) consumeAssertion() bool {
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumeAtom() bool {
-	return true
+	return false
 }
 
 //------------------------------------------------------------------------------
@@ -157,7 +157,9 @@ func (p *Parser) consumeAtom() bool {
 
 func (p *Parser) consumeOptionalQuantifier() bool {
 	p.consumeQuantifier()
-	return true
+	return false
 }
 
-func (p *Parser) consumeQuantifier() {}
+func (p *Parser) consumeQuantifier() bool {
+	return false
+}
