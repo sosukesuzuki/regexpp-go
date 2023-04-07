@@ -21,15 +21,15 @@ func (n *Character) isElement() {}
 
 type Pattern struct {
 	Alternatives []Alternative
-	Loc Loc
+	Loc          Loc
 }
 
 type Alternative struct {
 	Elements []Element
-	Loc Loc
+	Loc      Loc
 }
 
 type Character struct {
 	value uint
-	Loc Loc
+	Loc   Loc
 }
