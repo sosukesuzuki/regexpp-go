@@ -99,10 +99,10 @@ func (p *Parser) onAlternativeEnter(start int) {
 	}
 	alt := &regexp_ast.Alternative{
 		Elements: []regexp_ast.Element{},
-		Parent: parent,
+		Parent:   parent,
 		Loc: regexp_ast.Loc{
 			Start: start,
-			End: -1,
+			End:   -1,
 		},
 	}
 	p.node = alt
@@ -111,5 +111,5 @@ func (p *Parser) onAlternativeEnter(start int) {
 
 func (p *Parser) onAlternativeLeave(start int, end int) {
 	p.node.SetEnd(end)
-	p.node =  p.node.GetParent()
+	p.node = p.node.GetParent()
 }
