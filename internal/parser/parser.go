@@ -188,16 +188,12 @@ func (p *Parser) consumeQuantifier() bool {
 func (p *Parser) consumePatternCharacter() bool {
 	start := p.lexer.I
 	cp := p.lexer.CP
-	if (cp != -1) {
+	if cp != -1 && !isSyntaxCharacter(cp) {
 		p.lexer.Next()
 		p.onCharacter(start, p.lexer.I, cp)
 		return true
 	}
 	return false
-}
-
-func (p *Parser) onCharacter(start int, end int, value int) {
-	// TODO: implement
 }
 
 //------------------------------------------------------------------------------
@@ -239,4 +235,45 @@ func (p *Parser) consumeUncapturingGroup() bool {
 // ------------------------------------------------------------------------------
 func (p *Parser) consumeCapturingGroup() bool {
 	return false
+}
+
+// ------------------------------------------------------------------------------
+// SourceCharacter
+// https://tc39.es/ecma262/multipage/ecmascript-language-source-code.html#prod-SourceCharacter
+// ------------------------------------------------------------------------------
+func (p *Parser) onCharacter(start int, end int, value int) {
+	switch parent := p.node.GetParent().(type) {
+	case *regexp_ast.Alternative:
+	case *regexp_ast.CharacterClass:
+		parent.Elements = append(parent.Elements, &regexp_ast.Character{
+			Value: value,
+			Loc: regexp_ast.Loc{
+				Start: start,
+				End:   end,
+			},
+		})
+	default:
+		p.raise("The parent of Character must be Alternative or CharacterClass")
+	}
+}
+
+//------------------------------------------------------------------------------
+// SyntaxCharacter
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-SyntaxCharacter
+//------------------------------------------------------------------------------
+func isSyntaxCharacter(cp int) bool {
+	return cp == unicode_consts.CircumflexAccent ||
+		cp == unicode_consts.DollarSign ||
+		cp == unicode_consts.ReverseSolidus ||
+		cp == unicode_consts.FullStop ||
+		cp == unicode_consts.Asterisk ||
+		cp == unicode_consts.PlusSign ||
+		cp == unicode_consts.QuestionMark ||
+		cp == unicode_consts.LeftParenthesis ||
+		cp == unicode_consts.RightParenthesis ||
+		cp == unicode_consts.LeftSquareBracket ||
+		cp == unicode_consts.RightSquareBracket ||
+		cp == unicode_consts.LeftCurlyBracket ||
+		cp == unicode_consts.RightCurlyBracket ||
+		cp == unicode_consts.VerticalLine
 }
