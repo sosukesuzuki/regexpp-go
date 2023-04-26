@@ -186,7 +186,18 @@ func (p *Parser) consumeQuantifier() bool {
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumePatternCharacter() bool {
+	start := p.lexer.I
+	cp := p.lexer.CP
+	if (cp != -1) {
+		p.lexer.Next()
+		p.onCharacter(start, p.lexer.I, cp)
+		return true
+	}
 	return false
+}
+
+func (p *Parser) onCharacter(start int, end int, value int) {
+	// TODO: implement
 }
 
 //------------------------------------------------------------------------------
