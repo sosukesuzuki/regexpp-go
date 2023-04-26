@@ -17,7 +17,6 @@ type Parser struct {
 }
 
 func NewParser(s string, u bool) Parser {
-	// これじゃだめじゃん
 	return Parser{
 		lexer:   lexer.NewLexer(s, u),
 		pattern: nil,
@@ -159,7 +158,12 @@ func (p *Parser) consumeAssertion() bool {
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumeAtom() bool {
-	return false
+	return p.consumePatternCharacter() ||
+		p.consumeDot() ||
+		p.consumeReverseSolidusAtomEscape() ||
+		p.consumeCharacterClass() ||
+		p.consumeUncapturingGroup() ||
+		p.consumeCapturingGroup()
 }
 
 //------------------------------------------------------------------------------
@@ -173,5 +177,55 @@ func (p *Parser) consumeOptionalQuantifier() bool {
 }
 
 func (p *Parser) consumeQuantifier() bool {
+	return false
+}
+
+//------------------------------------------------------------------------------
+// PatternCharacter
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-PatternCharacter
+//------------------------------------------------------------------------------
+
+func (p *Parser) consumePatternCharacter() bool {
+	return false
+}
+
+//------------------------------------------------------------------------------
+// .
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Atom
+//------------------------------------------------------------------------------
+
+func (p *Parser) consumeDot() bool {
+	return false
+}
+
+// ------------------------------------------------------------------------------
+// \ AtomEscape
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Atom
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeReverseSolidusAtomEscape() bool {
+	return false
+}
+
+// ------------------------------------------------------------------------------
+// CharacterClass
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-CharacterClass
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeCharacterClass() bool {
+	return false
+}
+
+// ------------------------------------------------------------------------------
+// ( GroupSpecifier Disjunction )
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Atom
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeUncapturingGroup() bool {
+	return false
+}
+
+// ------------------------------------------------------------------------------
+// (?: Disjunction )
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-Atom
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeCapturingGroup() bool {
 	return false
 }
