@@ -17,10 +17,10 @@ type Parser struct {
 }
 
 func NewParser(s string, u bool) Parser {
-	pattern := regexp_ast.Pattern{}
+	// これじゃだめじゃん
 	return Parser{
 		lexer:   lexer.NewLexer(s, u),
-		pattern: &pattern,
+		pattern: nil,
 		node:    nil,
 	}
 }
@@ -50,13 +50,15 @@ func (p *Parser) consumePattern() {
 }
 
 func (p *Parser) onPatternEnter(start int) {
-	p.node = &regexp_ast.Pattern{
+	pattern := &regexp_ast.Pattern{
 		Alternatives: []*regexp_ast.Alternative{},
 		Loc: regexp_ast.Loc{
 			Start: start,
 			End:   -1,
 		},
 	}
+	p.node = pattern
+	p.pattern = pattern
 }
 
 func (p *Parser) onPatternLeave(start int, end int) {
