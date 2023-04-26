@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"reflect"
 	"testing"
 
 	"github.com/sosukesuzuki/regexpp-go/internal/parser"
@@ -35,12 +36,31 @@ func TestParsePattern(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		outputPath := filepath.Join(fixtureDirPath, "output.json")
 		if u {
 			j, err := json.MarshalIndent(pattern, "", "  ")
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			os.WriteFile(filepath.Join(fixtureDirPath, "output.json"), j, 0660)
+			os.WriteFile(outputPath, j, 0660)
+		} else {
+			bytes1, err := ioutil.ReadFile(outputPath)
+			if err != nil {
+				t.Error("Failed to read output.json file")
+			}
+			bytes2, err := json.MarshalIndent(pattern, "", "  ")
+			if err != nil {
+				t.Error("Failed to marshal pattern")
+			}
+
+			var p1, p2 interface{}
+
+			json.Unmarshal(bytes1, &p1)
+			json.Unmarshal(bytes2, &p2)
+
+			if !reflect.DeepEqual(p1, p2) {
+				t.Error("Diff")
+			}
 		}
 	}
 }
