@@ -12,7 +12,11 @@ type CharCodeUtils interface {
 type Legacy struct{}
 
 func (u *Legacy) At(s string, i int) int {
-	return int(utf16.Encode([]rune(s))[i])
+	runes := utf16.Encode([]rune(s))
+	if i >= 0 && i < len(runes) {
+		return int(utf16.Encode([]rune(s))[i])
+	}
+	return -1
 }
 func (u *Legacy) Width(c int) int {
 	return 1
@@ -21,7 +25,11 @@ func (u *Legacy) Width(c int) int {
 type Unicode struct{}
 
 func (u *Unicode) At(s string, i int) int {
-	return int([]rune(s)[i])
+	runes := []rune(s)
+	if i >= 0 && i < len(runes) {
+		return int([]rune(s)[i])
+	}
+	return -1
 }
 func (u *Unicode) Width(c int) int {
 	if c > 0xffff {

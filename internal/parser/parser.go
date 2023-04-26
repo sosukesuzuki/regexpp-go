@@ -242,8 +242,15 @@ func (p *Parser) consumeCapturingGroup() bool {
 // https://tc39.es/ecma262/multipage/ecmascript-language-source-code.html#prod-SourceCharacter
 // ------------------------------------------------------------------------------
 func (p *Parser) onCharacter(start int, end int, value int) {
-	switch parent := p.node.GetParent().(type) {
+	switch parent := p.node.(type) {
 	case *regexp_ast.Alternative:
+		parent.Elements = append(parent.Elements, &regexp_ast.Character{
+			Value: value,
+			Loc: regexp_ast.Loc{
+				Start: start,
+				End:   end,
+			},
+		})
 	case *regexp_ast.CharacterClass:
 		parent.Elements = append(parent.Elements, &regexp_ast.Character{
 			Value: value,
@@ -257,10 +264,10 @@ func (p *Parser) onCharacter(start int, end int, value int) {
 	}
 }
 
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 // SyntaxCharacter
 // https://tc39.es/ecma262/multipage/text-processing.html#prod-SyntaxCharacter
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 func isSyntaxCharacter(cp int) bool {
 	return cp == unicode_consts.CircumflexAccent ||
 		cp == unicode_consts.DollarSign ||

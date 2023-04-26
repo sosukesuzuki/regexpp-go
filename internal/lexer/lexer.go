@@ -1,6 +1,8 @@
 package lexer
 
-import "github.com/sosukesuzuki/regexpp-go/internal/char_code_utils"
+import (
+	"github.com/sosukesuzuki/regexpp-go/internal/char_code_utils"
+)
 
 type Lexer struct {
 	/*

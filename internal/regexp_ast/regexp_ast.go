@@ -33,24 +33,24 @@ type Element interface {
 func (n *Character) isElement() {}
 
 type Pattern struct {
-	Alternatives []*Alternative
 	Loc          Loc
+	Alternatives []*Alternative
 }
 
 type Alternative struct {
+	Parent   Node `json:"-"`
 	Elements []Element
-	Parent   Node
 	Loc      Loc
 }
 
 type Character struct {
-	Value  int
-	Parent Node
+	Parent Node `json:"-"`
 	Loc    Loc
+	Value  int
 }
 
 type CharacterClass struct {
-	Parent   Node
+	Parent   Node `json:"-"`
 	Loc      Loc
 	Negate   bool
 	Elements []Element
