@@ -202,8 +202,8 @@ func (p *Parser) consumePatternCharacter() bool {
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumeDot() bool {
-	if (p.lexer.Eat(unicode_consts.FullStop)) {
-		p.onAnyCharacterSet(p.lexer.I - 1, p.lexer.I)
+	if p.lexer.Eat(unicode_consts.FullStop) {
+		p.onAnyCharacterSet(p.lexer.I-1, p.lexer.I)
 		return true
 	}
 	return false
@@ -216,7 +216,7 @@ func (p *Parser) onAnyCharacterSet(start int, end int) {
 			Parent: parent,
 			Loc: regexp_ast.Loc{
 				Start: start,
-				End: end,
+				End:   end,
 			},
 		})
 	default:
@@ -265,7 +265,7 @@ func (p *Parser) onCharacter(start int, end int, value int) {
 	case *regexp_ast.Alternative:
 		parent.Elements = append(parent.Elements, &regexp_ast.Character{
 			Parent: parent,
-			Value: value,
+			Value:  value,
 			Loc: regexp_ast.Loc{
 				Start: start,
 				End:   end,
@@ -274,7 +274,7 @@ func (p *Parser) onCharacter(start int, end int, value int) {
 	case *regexp_ast.CharacterClass:
 		parent.Elements = append(parent.Elements, &regexp_ast.Character{
 			Parent: parent,
-			Value: value,
+			Value:  value,
 			Loc: regexp_ast.Loc{
 				Start: start,
 				End:   end,

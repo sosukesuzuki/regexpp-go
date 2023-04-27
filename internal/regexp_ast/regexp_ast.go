@@ -30,7 +30,7 @@ type Element interface {
 	isElement()
 }
 
-func (n *Character) isElement() {}
+func (n *Character) isElement()       {}
 func (n *AnyCharacterSet) isElement() {}
 
 type CharacterSet interface {
@@ -66,5 +66,5 @@ type CharacterClass struct {
 // Dot
 type AnyCharacterSet struct {
 	Parent Node `json:"-"`
-	Loc Loc
+	Loc    Loc
 }
