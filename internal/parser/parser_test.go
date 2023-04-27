@@ -58,6 +58,7 @@ func TestParsePattern(t *testing.T) {
 			json.Unmarshal(bytes1, &p1)
 			json.Unmarshal(bytes2, &p2)
 
+			// TODO: more readable diff view
 			if !reflect.DeepEqual(p1, p2) {
 				t.Error("Diff")
 			}
