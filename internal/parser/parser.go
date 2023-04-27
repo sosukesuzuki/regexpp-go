@@ -202,7 +202,26 @@ func (p *Parser) consumePatternCharacter() bool {
 //------------------------------------------------------------------------------
 
 func (p *Parser) consumeDot() bool {
+	if (p.lexer.Eat(unicode_consts.FullStop)) {
+		p.onAnyCharacterSet(p.lexer.I - 1, p.lexer.I)
+		return true
+	}
 	return false
+}
+
+func (p *Parser) onAnyCharacterSet(start int, end int) {
+	switch parent := p.node.(type) {
+	case *regexp_ast.Alternative:
+		parent.Elements = append(parent.Elements, &regexp_ast.AnyCharacterSet{
+			Parent: parent,
+			Loc: regexp_ast.Loc{
+				Start: start,
+				End: end,
+			},
+		})
+	default:
+		p.raise("The parent of AnyCharacterSet must be Alternative")
+	}
 }
 
 // ------------------------------------------------------------------------------
@@ -245,6 +264,7 @@ func (p *Parser) onCharacter(start int, end int, value int) {
 	switch parent := p.node.(type) {
 	case *regexp_ast.Alternative:
 		parent.Elements = append(parent.Elements, &regexp_ast.Character{
+			Parent: parent,
 			Value: value,
 			Loc: regexp_ast.Loc{
 				Start: start,
@@ -253,6 +273,7 @@ func (p *Parser) onCharacter(start int, end int, value int) {
 		})
 	case *regexp_ast.CharacterClass:
 		parent.Elements = append(parent.Elements, &regexp_ast.Character{
+			Parent: parent,
 			Value: value,
 			Loc: regexp_ast.Loc{
 				Start: start,

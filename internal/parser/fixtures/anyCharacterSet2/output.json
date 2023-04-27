@@ -1,7 +1,7 @@
 {
   "Loc": {
     "Start": 0,
-    "End": 2
+    "End": 3
   },
   "Alternatives": [
     {
@@ -17,13 +17,19 @@
           "Loc": {
             "Start": 1,
             "End": 2
+          }
+        },
+        {
+          "Loc": {
+            "Start": 2,
+            "End": 3
           },
           "Value": 98
         }
       ],
       "Loc": {
         "Start": 0,
-        "End": 2
+        "End": 3
       }
     }
   ]

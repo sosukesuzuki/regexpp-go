@@ -31,6 +31,13 @@ type Element interface {
 }
 
 func (n *Character) isElement() {}
+func (n *AnyCharacterSet) isElement() {}
+
+type CharacterSet interface {
+	isCharacterSet()
+}
+
+func (n *AnyCharacterSet) isCharacterSet() {}
 
 type Pattern struct {
 	Loc          Loc
@@ -54,4 +61,10 @@ type CharacterClass struct {
 	Loc      Loc
 	Negate   bool
 	Elements []Element
+}
+
+// Dot
+type AnyCharacterSet struct {
+	Parent Node `json:"-"`
+	Loc Loc
 }
