@@ -1,0 +1,38 @@
+{
+  "Loc": {
+    "Start": 0,
+    "End": 3
+  },
+  "Alternatives": [
+    {
+      "Elements": [
+        {
+          "Loc": {
+            "Start": 0,
+            "End": 1
+          },
+          "Value": 97
+        }
+      ],
+      "Loc": {
+        "Start": 0,
+        "End": 1
+      }
+    },
+    {
+      "Elements": [
+        {
+          "Loc": {
+            "Start": 2,
+            "End": 3
+          },
+          "Value": 98
+        }
+      ],
+      "Loc": {
+        "Start": 2,
+        "End": 3
+      }
+    }
+  ]
+}
