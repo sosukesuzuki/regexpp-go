@@ -34,7 +34,7 @@ func TestParsePattern(t *testing.T) {
 		parser := parser.NewParser(input, true)
 		pattern, err := parser.ParsePattern()
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Errorf("%s: (%s)", fixtureDirPath, err.Error())
 		}
 		outputPath := filepath.Join(fixtureDirPath, "output.json")
 		if u {

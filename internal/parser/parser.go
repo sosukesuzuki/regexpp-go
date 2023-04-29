@@ -210,6 +210,8 @@ func (p *Parser) consumeQuantifier() bool {
 		return false
 	}
 
+	greety = !p.lexer.Eat(unicode_consts.QuestionMark)
+
 	p.onQuantifier(start, p.lexer.I, min, max, greety)
 
 	return false
@@ -241,6 +243,7 @@ func (p *Parser) onQuantifier(start int, end int, min int, max int, greety bool)
 					node.SetParent(q)
 				} else {
 					p.raise("Maybe unureaced")
+					return false
 				}
 				return true
 			}

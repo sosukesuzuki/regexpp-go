@@ -13,7 +13,7 @@
           },
           "Min": 0,
           "Max": 1,
-          "Greety": false,
+          "Greety": true,
           "Element": {
             "Loc": {
               "Start": 0,

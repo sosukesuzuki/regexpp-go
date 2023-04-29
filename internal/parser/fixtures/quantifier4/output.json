@@ -1,7 +1,7 @@
 {
   "Loc": {
     "Start": 0,
-    "End": 2
+    "End": 3
   },
   "Alternatives": [
     {
@@ -11,7 +11,7 @@
             "Start": 1,
             "End": 2
           },
-          "Min": 1,
+          "Min": 0,
           "Max": 9223372036854775807,
           "Greety": true,
           "Element": {
@@ -21,11 +21,18 @@
             },
             "Value": 97
           }
+        },
+        {
+          "Loc": {
+            "Start": 2,
+            "End": 3
+          },
+          "Value": 98
         }
       ],
       "Loc": {
         "Start": 0,
-        "End": 2
+        "End": 3
       }
     }
   ]
