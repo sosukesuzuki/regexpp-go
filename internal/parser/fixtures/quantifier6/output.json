@@ -1,0 +1,71 @@
+{
+  "Loc": {
+    "Start": 0,
+    "End": 8
+  },
+  "Alternatives": [
+    {
+      "Elements": [
+        {
+          "Loc": {
+            "Start": 0,
+            "End": 1
+          },
+          "Value": 97
+        },
+        {
+          "Loc": {
+            "Start": 2,
+            "End": 3
+          },
+          "Min": 0,
+          "Max": 9223372036854775807,
+          "Greety": true,
+          "Element": {
+            "Loc": {
+              "Start": 1,
+              "End": 2
+            },
+            "Value": 98
+          }
+        },
+        {
+          "Loc": {
+            "Start": 4,
+            "End": 5
+          },
+          "Min": 1,
+          "Max": 9223372036854775807,
+          "Greety": true,
+          "Element": {
+            "Loc": {
+              "Start": 3,
+              "End": 4
+            },
+            "Value": 99
+          }
+        },
+        {
+          "Loc": {
+            "Start": 6,
+            "End": 8
+          },
+          "Min": 0,
+          "Max": 1,
+          "Greety": false,
+          "Element": {
+            "Loc": {
+              "Start": 5,
+              "End": 6
+            },
+            "Value": 100
+          }
+        }
+      ],
+      "Loc": {
+        "Start": 0,
+        "End": 8
+      }
+    }
+  ]
+}
