@@ -8,7 +8,7 @@ const (
 	ReverseSolidus     = 0x5c // \
 	FullStop           = 0x2e // .
 	Asterisk           = 0x2a // *
-	PlusSign           = 0x28 // +
+	PlusSign           = 0x2b // +
 	QuestionMark       = 0x3f // ?
 	LeftParenthesis    = 0x28 // (
 	RightParenthesis   = 0x29 // )

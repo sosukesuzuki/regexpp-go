@@ -2,6 +2,7 @@ package parser
 
 import (
 	"errors"
+	"math"
 
 	"github.com/sosukesuzuki/regexpp-go/internal/lexer"
 	"github.com/sosukesuzuki/regexpp-go/internal/regexp_ast"
@@ -176,8 +177,79 @@ func (p *Parser) consumeOptionalQuantifier() bool {
 	return true
 }
 
+// Quantifier::
+//
+//	QuantifierPrefix
+//	QuantifierPrefix `?`
+//
+// QuantifierPrefix::
+//
+//	`*`
+//	`+`
+//	`?`
+//	`{` DecimalDigits `}`
+//	`{` DecimalDigits `,}`
+//	`{` DecimalDigits `,` DecimalDigits `}`
 func (p *Parser) consumeQuantifier() bool {
+	start := p.lexer.I
+	min := 0
+	max := 0
+	greety := false
+
+	if p.lexer.Eat(unicode_consts.Asterisk) {
+		min = 0
+		max = math.MaxInt
+	} else if p.lexer.Eat(unicode_consts.PlusSign) {
+		min = 1
+		max = math.MaxInt
+	} else if p.lexer.Eat(unicode_consts.QuestionMark) {
+		min = 0
+		max = 1
+	} else {
+		// TODO: support { DicimalDigits } Syntax
+		return false
+	}
+
+	p.onQuantifier(start, p.lexer.I, min, max, greety)
+
 	return false
+}
+
+func (p *Parser) onQuantifier(start int, end int, min int, max int, greety bool) bool {
+	switch parent := p.node.(type) {
+	case *regexp_ast.Alternative:
+		{
+			// Replace the last element (pop)
+			element := parent.Elements[len(parent.Elements)-1]
+			elements := parent.Elements[:len(parent.Elements)-1]
+			parent.Elements = elements
+
+			if quantifiable, ok := element.(regexp_ast.QuantifiableElement); ok {
+				q := &regexp_ast.Quantifier{
+					Parent: parent,
+					Loc: regexp_ast.Loc{
+						Start: start,
+						End:   end,
+					},
+					Greety:  greety,
+					Min:     min,
+					Max:     max,
+					Element: quantifiable,
+				}
+				parent.Elements = append(parent.Elements, q)
+				if node, ok := quantifiable.(regexp_ast.Node); ok {
+					node.SetParent(q)
+				} else {
+					p.raise("Maybe unureaced")
+				}
+				return true
+			}
+			return false
+		}
+	default:
+		p.raise("The parent of Quantifier must  be Alternative")
+		return false
+	}
 }
 
 //------------------------------------------------------------------------------
