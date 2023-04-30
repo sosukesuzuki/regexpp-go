@@ -205,8 +205,10 @@ func (p *Parser) consumeQuantifier() bool {
 	} else if p.lexer.Eat(unicode_consts.QuestionMark) {
 		min = 0
 		max = 1
+	} else if v, ok := p.eatBracedQuantifier(); ok {
+		min = v.min
+		max = v.max
 	} else {
-		// TODO: support { DicimalDigits } Syntax
 		return false
 	}
 
@@ -253,6 +255,38 @@ func (p *Parser) onQuantifier(start int, end int, min int, max int, greety bool)
 		p.raise("The parent of Quantifier must  be Alternative")
 		return false
 	}
+}
+
+func (p *Parser) eatBracedQuantifier() (struct {
+	min int
+	max int
+}, bool) {
+	start := p.lexer.I
+	min := 0
+	max := math.MaxInt
+	if p.lexer.Eat(unicode_consts.LeftCurlyBracket) {
+		if digit := p.eatDecimalDigits(); digit != -1 {
+			min = digit
+			max = digit
+			if p.lexer.Eat(unicode_consts.Comma) {
+				if secondDigit := p.eatDecimalDigits(); secondDigit != -1 {
+					max = secondDigit
+				}
+			}
+			if p.lexer.Eat(unicode_consts.RightCurlyBracket) {
+				return (struct {
+					min int
+					max int
+				}{min: min, max: max}), true
+			}
+			p.raise("Imcomplete Quantifier")
+			p.lexer.Rwind(start)
+		}
+	}
+	return struct {
+		min int
+		max int
+	}{}, false
 }
 
 //------------------------------------------------------------------------------
@@ -379,4 +413,35 @@ func isSyntaxCharacter(cp int) bool {
 		cp == unicode_consts.LeftCurlyBracket ||
 		cp == unicode_consts.RightCurlyBracket ||
 		cp == unicode_consts.VerticalLine
+}
+
+// ------------------------------------------------------------------------------
+// DecimalDigit, DecimalDigits
+// https://tc39.es/ecma262/multipage/notational-conventions.html#prod-grammar-notation-DecimalDigit
+//
+// DecimalDigit :: one of
+//   0 1 2 3 4 5 6 7 8 9
+//
+// DegimalDigits ::
+//   DecimalDigit
+//   DecimalDigits DecimalDigit
+//
+// ------------------------------------------------------------------------------
+
+// Eat DecimalDigits. Returns int value that is eaten last time. If eating is failed, returns -1.
+func (p *Parser) eatDecimalDigits() int {
+	start := p.lexer.I
+	lastInt := 0
+	for {
+		if !unicode_consts.IsDecimalDigit(p.lexer.CP) {
+			break
+		}
+		lastInt = 10*lastInt + unicode_consts.DecimalToDigit(p.lexer.CP)
+		p.lexer.Next()
+	}
+	if p.lexer.I != start {
+		return lastInt
+	} else {
+		return -1
+	}
 }

@@ -1,0 +1,79 @@
+{
+  "Loc": {
+    "Start": 0,
+    "End": 22
+  },
+  "Alternatives": [
+    {
+      "Elements": [
+        {
+          "Loc": {
+            "Start": 1,
+            "End": 6
+          },
+          "Min": 11,
+          "Max": 11,
+          "Greety": true,
+          "Element": {
+            "Loc": {
+              "Start": 0,
+              "End": 1
+            },
+            "Value": 97
+          }
+        },
+        {
+          "Loc": {
+            "Start": 7,
+            "End": 9
+          },
+          "Min": 1,
+          "Max": 9223372036854775807,
+          "Greety": false,
+          "Element": {
+            "Loc": {
+              "Start": 6,
+              "End": 7
+            }
+          }
+        },
+        {
+          "Loc": {
+            "Start": 10,
+            "End": 17
+          },
+          "Min": 0,
+          "Max": 20,
+          "Greety": false,
+          "Element": {
+            "Loc": {
+              "Start": 9,
+              "End": 10
+            },
+            "Value": 98
+          }
+        },
+        {
+          "Loc": {
+            "Start": 18,
+            "End": 22
+          },
+          "Min": 5,
+          "Max": 5,
+          "Greety": false,
+          "Element": {
+            "Loc": {
+              "Start": 17,
+              "End": 18
+            },
+            "Value": 99
+          }
+        }
+      ],
+      "Loc": {
+        "Start": 0,
+        "End": 22
+      }
+    }
+  ]
+}
