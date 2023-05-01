@@ -65,7 +65,7 @@ func (t *Lexer) Match(c int) bool {
 	return t.CP == c
 }
 
-func (t *Lexer) Rwind(i int) {
+func (t *Lexer) Rewind(i int) {
 	t.I = i
 	t.CP = (*t.cu).At(t.s, t.I)
 	t.w = (*t.cu).Width(t.CP)

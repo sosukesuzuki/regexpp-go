@@ -1,0 +1,45 @@
+{
+  "Loc": {
+    "Start": 0,
+    "End": 5
+  },
+  "Alternatives": [
+    {
+      "Elements": [
+        {
+          "Loc": {
+            "Start": 0,
+            "End": 5
+          },
+          "Negate": false,
+          "Elements": [
+            {
+              "Loc": {
+                "Start": 1,
+                "End": 4
+              },
+              "Min": {
+                "Loc": {
+                  "Start": 1,
+                  "End": 2
+                },
+                "Value": 97
+              },
+              "Max": {
+                "Loc": {
+                  "Start": 3,
+                  "End": 4
+                },
+                "Value": 98
+              }
+            }
+          ]
+        }
+      ],
+      "Loc": {
+        "Start": 0,
+        "End": 5
+      }
+    }
+  ]
+}
