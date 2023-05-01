@@ -15,6 +15,7 @@ const fixtures = "./fixtures"
 
 func TestParsePattern(t *testing.T) {
 	u := os.Getenv("UPDATE") == "true"
+	target := os.Getenv("TARGET")
 
 	fixtureDirs, err := ioutil.ReadDir(fixtures)
 	if err != nil {
@@ -24,6 +25,9 @@ func TestParsePattern(t *testing.T) {
 	for _, dir := range fixtureDirs {
 		if !dir.IsDir() {
 			continue
+		}
+		if target != "" && target != dir.Name() {
+			continue;
 		}
 		fixtureDirPath := filepath.Join(fixtures, dir.Name())
 		bytes, err := ioutil.ReadFile(filepath.Join(fixtureDirPath, "input.txt"))
