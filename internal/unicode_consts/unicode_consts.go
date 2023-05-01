@@ -2,9 +2,9 @@ package unicode_consts
 
 const (
 	Eof                 = 0x1A
-	Backspace = 0x08
+	Backspace           = 0x08
 	LatinSmallLetterA   = 0x61 // a
-	LatinSmallLetterB = 0x62 // b
+	LatinSmallLetterB   = 0x62 // b
 	LatinSmallLetterF   = 0x66 // f
 	LatinCapitalLetterA = 0x41 // A
 	LatinCapitalLetterF = 0x46 // F
@@ -25,7 +25,7 @@ const (
 	LeftCurlyBracket    = 0x7b // {
 	RightCurlyBracket   = 0x7d // {
 	Comma               = 0x2c // ,
-	HyphenMinus = 0x2d // -
+	HyphenMinus         = 0x2d // -
 )
 
 func IsDecimalDigit(code int) bool {

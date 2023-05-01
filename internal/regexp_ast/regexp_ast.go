@@ -12,37 +12,37 @@ type Node interface {
 	SetParent(parent Node)
 }
 
-func (n *Pattern) isNode()         {}
-func (n *Alternative) isNode()     {}
-func (n *Character) isNode()       {}
-func (n *CharacterClass) isNode()  {}
-func (n *AnyCharacterSet) isNode() {}
-func (n *Quantifier) isNode()      {}
+func (n *Pattern) isNode()             {}
+func (n *Alternative) isNode()         {}
+func (n *Character) isNode()           {}
+func (n *CharacterClass) isNode()      {}
+func (n *AnyCharacterSet) isNode()     {}
+func (n *Quantifier) isNode()          {}
 func (n *CharacterClassRange) isNode() {}
 
-func (n *Pattern) GetParent() Node         { return nil }
-func (n *Alternative) GetParent() Node     { return n.Parent }
-func (n *Character) GetParent() Node       { return n.Parent }
-func (n *CharacterClass) GetParent() Node  { return n.Parent }
-func (n *AnyCharacterSet) GetParent() Node { return n.Parent }
-func (n *Quantifier) GetParent() Node      { return n.Parent }
-func (n *CharacterClassRange) GetParent() Node { return n.Parent}
+func (n *Pattern) GetParent() Node             { return nil }
+func (n *Alternative) GetParent() Node         { return n.Parent }
+func (n *Character) GetParent() Node           { return n.Parent }
+func (n *CharacterClass) GetParent() Node      { return n.Parent }
+func (n *AnyCharacterSet) GetParent() Node     { return n.Parent }
+func (n *Quantifier) GetParent() Node          { return n.Parent }
+func (n *CharacterClassRange) GetParent() Node { return n.Parent }
 
-func (n *Pattern) SetParent(parent Node)         {}
-func (n *Alternative) SetParent(parent Node)     { n.Parent = parent }
-func (n *Character) SetParent(parent Node)       { n.Parent = parent }
-func (n *CharacterClass) SetParent(parent Node)  { n.Parent = parent }
-func (n *AnyCharacterSet) SetParent(parent Node) { n.Parent = parent }
-func (n *Quantifier) SetParent(parent Node)      { n.Parent = parent }
-func (n *CharacterClassRange) SetParent(parent Node) { n.Parent = parent}
+func (n *Pattern) SetParent(parent Node)             {}
+func (n *Alternative) SetParent(parent Node)         { n.Parent = parent }
+func (n *Character) SetParent(parent Node)           { n.Parent = parent }
+func (n *CharacterClass) SetParent(parent Node)      { n.Parent = parent }
+func (n *AnyCharacterSet) SetParent(parent Node)     { n.Parent = parent }
+func (n *Quantifier) SetParent(parent Node)          { n.Parent = parent }
+func (n *CharacterClassRange) SetParent(parent Node) { n.Parent = parent }
 
-func (n *Pattern) SetEnd(end int)         { n.Loc.End = end }
-func (n *Alternative) SetEnd(end int)     { n.Loc.End = end }
-func (n *Character) SetEnd(end int)       { n.Loc.End = end }
-func (n *CharacterClass) SetEnd(end int)  { n.Loc.End = end }
-func (n *AnyCharacterSet) SetEnd(end int) { n.Loc.End = end }
-func (n *Quantifier) SetEnd(end int)      { n.Loc.End = end }
-func (n *CharacterClassRange) SetEnd(end int) { n.Loc.End = end}
+func (n *Pattern) SetEnd(end int)             { n.Loc.End = end }
+func (n *Alternative) SetEnd(end int)         { n.Loc.End = end }
+func (n *Character) SetEnd(end int)           { n.Loc.End = end }
+func (n *CharacterClass) SetEnd(end int)      { n.Loc.End = end }
+func (n *AnyCharacterSet) SetEnd(end int)     { n.Loc.End = end }
+func (n *Quantifier) SetEnd(end int)          { n.Loc.End = end }
+func (n *CharacterClassRange) SetEnd(end int) { n.Loc.End = end }
 
 type Element interface {
 	isElement()
@@ -71,7 +71,7 @@ type CharacterClassElement interface {
 	isCharacterClassElement()
 }
 
-func (n *Character) isCharacterClassElement() {}
+func (n *Character) isCharacterClassElement()           {}
 func (n *CharacterClassRange) isCharacterClassElement() {}
 
 type Pattern struct {
@@ -116,7 +116,7 @@ type Quantifier struct {
 // [a-b]
 type CharacterClassRange struct {
 	Parent Node `json:"-"`
-	Loc Loc
-	Min *Character
-	Max *Character
+	Loc    Loc
+	Min    *Character
+	Max    *Character
 }

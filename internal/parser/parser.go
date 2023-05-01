@@ -348,8 +348,10 @@ func (p *Parser) consumeReverseSolidusAtomEscape() bool {
 
 // ------------------------------------------------------------------------------
 // CharacterClass ::
-//   [ [lookahead != ^] ClassRanges ]
-//   [ ^ ClassRanges ]
+//
+//	[ [lookahead != ^] ClassRanges ]
+//	[ ^ ClassRanges ]
+//
 // https://tc39.es/ecma262/multipage/text-processing.html#prod-CharacterClass
 // ------------------------------------------------------------------------------
 func (p *Parser) consumeCharacterClass() bool {
@@ -470,8 +472,10 @@ func (p *Parser) eatDecimalDigits() int {
 
 // ------------------------------------------------------------------------------
 // ClassRanges ::
-//   [empty]
-//   NoemptyClassRanges
+//
+//	[empty]
+//	NoemptyClassRanges
+//
 // https://tc39.es/ecma262/multipage/text-processing.html#prod-ClassRanges
 // ------------------------------------------------------------------------------
 func (p *Parser) consumeClassRanges() {
@@ -486,7 +490,7 @@ func (p *Parser) consumeClassRanges() {
 			continue
 		}
 
-		p.onCharacter(p.lexer.I - 1, p.lexer.I, unicode_consts.HyphenMinus)
+		p.onCharacter(p.lexer.I-1, p.lexer.I, unicode_consts.HyphenMinus)
 
 		if !p.consumeClassAtom() {
 			break
@@ -500,7 +504,7 @@ func (p *Parser) consumeClassRanges() {
 func (p *Parser) onCharacterClassRange(start int, end int, min int, max int) {
 	switch parent := p.node.(type) {
 	case *regexp_ast.CharacterClass:
-		three := parent.Elements[len(parent.Elements)-3:len(parent.Elements)]
+		three := parent.Elements[len(parent.Elements)-3 : len(parent.Elements)]
 		if len(three) != 3 {
 			p.raise("UnknownError")
 		}
@@ -520,7 +524,7 @@ func (p *Parser) onCharacterClassRange(start int, end int, min int, max int) {
 						Parent: parent,
 						Loc: regexp_ast.Loc{
 							Start: start,
-							End: end,
+							End:   end,
 						},
 						Min: minChar,
 						Max: maxChar,
@@ -538,11 +542,14 @@ func (p *Parser) onCharacterClassRange(start int, end int, min int, max int) {
 
 // ------------------------------------------------------------------------------
 // ClassAtom::
-//   -
-//   ClassAtomNoDash
+//
+//	-
+//	ClassAtomNoDash
+//
 // ClassAtomNoDash
-//   SourceCharacter but not one of / or ] or -
-//   \ ClassEscape
+//
+//	SourceCharacter but not one of / or ] or -
+//	\ ClassEscape
 //
 // https://tc39.es/ecma262/multipage/text-processing.html#prod-ClassAtom
 // ------------------------------------------------------------------------------
@@ -572,10 +579,12 @@ func (p *Parser) consumeClassAtom() bool {
 
 // ------------------------------------------------------------------------------
 // ClassEscape ::
-//   b
-//   -
-//   CharacterClassEscape
-//   CharacterEscape
+//
+//	b
+//	-
+//	CharacterClassEscape
+//	CharacterEscape
+//
 // https://tc39.es/ecma262/multipage/text-processing.html#prod-ClassEscape
 // ------------------------------------------------------------------------------
 func (p *Parser) consumeClassEscape() bool {
@@ -583,15 +592,15 @@ func (p *Parser) consumeClassEscape() bool {
 
 	// b
 	if p.lexer.Eat(unicode_consts.LatinSmallLetterB) {
-		p.state.lastIntValue  = unicode_consts.Backspace  
-		p.onCharacter(start - 1, p.lexer.I, p.state.lastIntValue)
+		p.state.lastIntValue = unicode_consts.Backspace
+		p.onCharacter(start-1, p.lexer.I, p.state.lastIntValue)
 		return true
 	}
 
 	// -
 	if p.lexer.Eat(unicode_consts.HyphenMinus) {
 		p.state.lastIntValue = unicode_consts.HyphenMinus
-		p.onCharacter(start - 1, p.lexer.I, p.state.lastIntValue)
+		p.onCharacter(start-1, p.lexer.I, p.state.lastIntValue)
 		return true
 	}
 
@@ -600,14 +609,15 @@ func (p *Parser) consumeClassEscape() bool {
 
 // ------------------------------------------------------------------------------
 // CharacterClassEscape ::
-//   d
-//   D
-//   s
-//   S
-//   w
-//   W
-//   p{ UnicodePropertyValueExpression }
-//   P{ UnicodePropertyValueExpression }
+//
+//	d
+//	D
+//	s
+//	S
+//	w
+//	W
+//	p{ UnicodePropertyValueExpression }
+//	P{ UnicodePropertyValueExpression }
 //
 // https://tc39.es/ecma262/multipage/text-processing.html#prod-CharacterClassEscape
 // ------------------------------------------------------------------------------
@@ -617,12 +627,13 @@ func (p *Parser) consumeCharacterClassEscape() bool {
 
 // ------------------------------------------------------------------------------
 // CharacterEscape ::
-//   ControlEscape
-//   c AsciiLetter
-//   0 [lookahead ∉ DecimalDigit]
-//   HexEscapeSequence
-//   RegExpUnicodeEscapeSequence
-//   IdentityEscape
+//
+//	ControlEscape
+//	c AsciiLetter
+//	0 [lookahead ∉ DecimalDigit]
+//	HexEscapeSequence
+//	RegExpUnicodeEscapeSequence
+//	IdentityEscape
 //
 // https://tc39.es/ecma262/multipage/text-processing.html#prod-CharacterEscape
 // ------------------------------------------------------------------------------
