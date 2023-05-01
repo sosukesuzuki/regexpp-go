@@ -376,9 +376,9 @@ func (p *Parser) onCharacterClassEnter(start int, negate bool) {
 			Parent: parent,
 			Loc: regexp_ast.Loc{
 				Start: start,
-				End: -1,
+				End:   -1,
 			},
-			Negate: negate,
+			Negate:   negate,
 			Elements: []regexp_ast.CharacterClassElement{},
 		}
 		p.node = node
@@ -394,6 +394,7 @@ func (p *Parser) onCharacterClassLeave(start int, end int, negate bool) {
 		if alt, ok := cc.Parent.(*regexp_ast.Alternative); ok {
 			cc.Loc.End = end
 			p.node = alt
+			return
 		}
 	}
 	p.raise("UnknownError")
@@ -630,7 +631,7 @@ func (p *Parser) consumeClassEscape() bool {
 		return true
 	}
 
-	return p.consumeCharacterClass() || p.consumeCharacterEscape()
+	return p.consumeCharacterClassEscape() || p.consumeCharacterEscape()
 }
 
 // ------------------------------------------------------------------------------

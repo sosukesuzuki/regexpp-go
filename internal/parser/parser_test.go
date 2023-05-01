@@ -27,7 +27,7 @@ func TestParsePattern(t *testing.T) {
 			continue
 		}
 		if target != "" && target != dir.Name() {
-			continue;
+			continue
 		}
 		fixtureDirPath := filepath.Join(fixtures, dir.Name())
 		bytes, err := ioutil.ReadFile(filepath.Join(fixtureDirPath, "input.txt"))
