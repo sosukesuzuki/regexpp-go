@@ -18,6 +18,7 @@ func (n *Character) isNode()       {}
 func (n *CharacterClass) isNode()  {}
 func (n *AnyCharacterSet) isNode() {}
 func (n *Quantifier) isNode()      {}
+func (n *CharacterClassRange) isNode() {}
 
 func (n *Pattern) GetParent() Node         { return nil }
 func (n *Alternative) GetParent() Node     { return n.Parent }
@@ -25,6 +26,7 @@ func (n *Character) GetParent() Node       { return n.Parent }
 func (n *CharacterClass) GetParent() Node  { return n.Parent }
 func (n *AnyCharacterSet) GetParent() Node { return n.Parent }
 func (n *Quantifier) GetParent() Node      { return n.Parent }
+func (n *CharacterClassRange) GetParent() Node { return n.Parent}
 
 func (n *Pattern) SetParent(parent Node)         {}
 func (n *Alternative) SetParent(parent Node)     { n.Parent = parent }
@@ -32,6 +34,7 @@ func (n *Character) SetParent(parent Node)       { n.Parent = parent }
 func (n *CharacterClass) SetParent(parent Node)  { n.Parent = parent }
 func (n *AnyCharacterSet) SetParent(parent Node) { n.Parent = parent }
 func (n *Quantifier) SetParent(parent Node)      { n.Parent = parent }
+func (n *CharacterClassRange) SetParent(parent Node) { n.Parent = parent}
 
 func (n *Pattern) SetEnd(end int)         { n.Loc.End = end }
 func (n *Alternative) SetEnd(end int)     { n.Loc.End = end }
@@ -39,6 +42,7 @@ func (n *Character) SetEnd(end int)       { n.Loc.End = end }
 func (n *CharacterClass) SetEnd(end int)  { n.Loc.End = end }
 func (n *AnyCharacterSet) SetEnd(end int) { n.Loc.End = end }
 func (n *Quantifier) SetEnd(end int)      { n.Loc.End = end }
+func (n *CharacterClassRange) SetEnd(end int) { n.Loc.End = end}
 
 type Element interface {
 	isElement()
@@ -63,6 +67,13 @@ func (n *Character) isQuantifiableElement()       {}
 func (n *CharacterClass) isQuantifiableElement()  {}
 func (n *AnyCharacterSet) isQuantifiableElement() {}
 
+type CharacterClassElement interface {
+	isCharacterClassElement()
+}
+
+func (n *Character) isCharacterClassElement() {}
+func (n *CharacterClassRange) isCharacterClassElement() {}
+
 type Pattern struct {
 	Loc          Loc
 	Alternatives []*Alternative
@@ -84,7 +95,7 @@ type CharacterClass struct {
 	Parent   Node `json:"-"`
 	Loc      Loc
 	Negate   bool
-	Elements []Element
+	Elements []CharacterClassElement
 }
 
 // Dot
@@ -100,4 +111,12 @@ type Quantifier struct {
 	Max     int
 	Greety  bool
 	Element QuantifiableElement
+}
+
+// [a-b]
+type CharacterClassRange struct {
+	Parent Node `json:"-"`
+	Loc Loc
+	Min *Character
+	Max *Character
 }

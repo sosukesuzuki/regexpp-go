@@ -288,7 +288,7 @@ func (p *Parser) eatBracedQuantifier() bool {
 				return true
 			}
 			p.raise("Imcomplete Quantifier")
-			p.lexer.Rwind(start)
+			p.lexer.Rewind(start)
 		}
 	}
 	return false
@@ -347,12 +347,29 @@ func (p *Parser) consumeReverseSolidusAtomEscape() bool {
 }
 
 // ------------------------------------------------------------------------------
-// CharacterClass
+// CharacterClass ::
+//   [ [lookahead != ^] ClassRanges ]
+//   [ ^ ClassRanges ]
 // https://tc39.es/ecma262/multipage/text-processing.html#prod-CharacterClass
 // ------------------------------------------------------------------------------
 func (p *Parser) consumeCharacterClass() bool {
+	start := p.lexer.I
+	if p.lexer.Eat(unicode_consts.LeftSquareBracket) {
+		negate := p.lexer.Eat(unicode_consts.CircumflexAccent)
+		p.onCharacterClassEnter(start, negate)
+		p.consumeClassRanges()
+		if !p.lexer.Eat(unicode_consts.RightSquareBracket) {
+			p.raise("Unterminated character class")
+		}
+		p.onCharacterClassLeave(start, p.lexer.I, negate)
+		return true
+	}
 	return false
 }
+
+func (p *Parser) onCharacterClassEnter(start int, negate bool) {}
+
+func (p *Parser) onCharacterClassLeave(start int, end int, negate bool) {}
 
 // ------------------------------------------------------------------------------
 // ( GroupSpecifier Disjunction )
@@ -449,4 +466,166 @@ func (p *Parser) eatDecimalDigits() int {
 	} else {
 		return -1
 	}
+}
+
+// ------------------------------------------------------------------------------
+// ClassRanges ::
+//   [empty]
+//   NoemptyClassRanges
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-ClassRanges
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeClassRanges() {
+	for {
+		rangeStart := p.lexer.I
+		if !p.consumeClassAtom() {
+			break
+		}
+		min := p.state.lastIntValue
+
+		if !p.lexer.Eat(unicode_consts.HyphenMinus) {
+			continue
+		}
+
+		p.onCharacter(p.lexer.I - 1, p.lexer.I, unicode_consts.HyphenMinus)
+
+		if !p.consumeClassAtom() {
+			break
+		}
+		max := p.state.lastIntValue
+
+		p.onCharacterClassRange(rangeStart, p.lexer.I, min, max)
+	}
+}
+
+func (p *Parser) onCharacterClassRange(start int, end int, min int, max int) {
+	switch parent := p.node.(type) {
+	case *regexp_ast.CharacterClass:
+		three := parent.Elements[len(parent.Elements)-3:len(parent.Elements)]
+		if len(three) != 3 {
+			p.raise("UnknownError")
+		}
+
+		minEl := three[0]
+		hyphenEl := three[1]
+		maxEl := three[2]
+		parent.Elements = parent.Elements[:len(parent.Elements)-3]
+		if minEl == nil || hyphenEl == nil || maxEl == nil {
+			p.raise("UnknwonError")
+		}
+
+		if minChar, ok := minEl.(*regexp_ast.Character); ok {
+			if hyphenChar, ok := hyphenEl.(*regexp_ast.Character); ok && hyphenChar.Value == unicode_consts.HyphenMinus {
+				if maxChar, ok := maxEl.(*regexp_ast.Character); ok {
+					node := &regexp_ast.CharacterClassRange{
+						Parent: parent,
+						Loc: regexp_ast.Loc{
+							Start: start,
+							End: end,
+						},
+						Min: minChar,
+						Max: maxChar,
+					}
+					parent.Elements = append(parent.Elements, node)
+					return
+				}
+			}
+		}
+		p.raise("UnkownError")
+	default:
+		p.raise("The parentof CharacterClassRange must be CharacterClass")
+	}
+}
+
+// ------------------------------------------------------------------------------
+// ClassAtom::
+//   -
+//   ClassAtomNoDash
+// ClassAtomNoDash
+//   SourceCharacter but not one of / or ] or -
+//   \ ClassEscape
+//
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-ClassAtom
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeClassAtom() bool {
+	start := p.lexer.I
+	cp := p.lexer.CP
+
+	if cp != -1 && cp != unicode_consts.ReverseSolidus && cp != unicode_consts.RightSquareBracket {
+		p.lexer.Next()
+		p.state.lastIntValue = cp
+		p.onCharacter(start, p.lexer.I, p.state.lastIntValue)
+		return true
+	}
+
+	if p.lexer.Eat(unicode_consts.ReverseSolidus) {
+		if p.consumeClassEscape() {
+			return true
+		}
+
+		p.raise("Invalid escape")
+
+		p.lexer.Rewind(start)
+	}
+
+	return false
+}
+
+// ------------------------------------------------------------------------------
+// ClassEscape ::
+//   b
+//   -
+//   CharacterClassEscape
+//   CharacterEscape
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-ClassEscape
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeClassEscape() bool {
+	start := p.lexer.I
+
+	// b
+	if p.lexer.Eat(unicode_consts.LatinSmallLetterB) {
+		p.state.lastIntValue  = unicode_consts.Backspace  
+		p.onCharacter(start - 1, p.lexer.I, p.state.lastIntValue)
+		return true
+	}
+
+	// -
+	if p.lexer.Eat(unicode_consts.HyphenMinus) {
+		p.state.lastIntValue = unicode_consts.HyphenMinus
+		p.onCharacter(start - 1, p.lexer.I, p.state.lastIntValue)
+		return true
+	}
+
+	return p.consumeCharacterClass() || p.consumeCharacterEscape()
+}
+
+// ------------------------------------------------------------------------------
+// CharacterClassEscape ::
+//   d
+//   D
+//   s
+//   S
+//   w
+//   W
+//   p{ UnicodePropertyValueExpression }
+//   P{ UnicodePropertyValueExpression }
+//
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-CharacterClassEscape
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeCharacterClassEscape() bool {
+	return false
+}
+
+// ------------------------------------------------------------------------------
+// CharacterEscape ::
+//   ControlEscape
+//   c AsciiLetter
+//   0 [lookahead ∉ DecimalDigit]
+//   HexEscapeSequence
+//   RegExpUnicodeEscapeSequence
+//   IdentityEscape
+//
+// https://tc39.es/ecma262/multipage/text-processing.html#prod-CharacterEscape
+// ------------------------------------------------------------------------------
+func (p *Parser) consumeCharacterEscape() bool {
+	return false
 }
