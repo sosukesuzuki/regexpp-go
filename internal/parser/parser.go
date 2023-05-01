@@ -15,6 +15,11 @@ type Parser struct {
 	pattern *regexp_ast.Pattern
 	node    regexp_ast.Node
 	errors  []error
+	state   *struct {
+		lastIntValue int
+		lastMaxValue int
+		lastMinValue int
+	}
 }
 
 func NewParser(s string, u bool) Parser {
@@ -22,6 +27,15 @@ func NewParser(s string, u bool) Parser {
 		lexer:   lexer.NewLexer(s, u),
 		pattern: nil,
 		node:    nil,
+		state: &struct {
+			lastIntValue int
+			lastMaxValue int
+			lastMinValue int
+		}{
+			lastIntValue: 0,
+			lastMaxValue: 0,
+			lastMinValue: 0,
+		},
 	}
 }
 
@@ -205,9 +219,9 @@ func (p *Parser) consumeQuantifier() bool {
 	} else if p.lexer.Eat(unicode_consts.QuestionMark) {
 		min = 0
 		max = 1
-	} else if v, ok := p.eatBracedQuantifier(); ok {
-		min = v.min
-		max = v.max
+	} else if p.eatBracedQuantifier() {
+		min = p.state.lastMinValue
+		max = p.state.lastMaxValue
 	} else {
 		return false
 	}
@@ -257,36 +271,27 @@ func (p *Parser) onQuantifier(start int, end int, min int, max int, greety bool)
 	}
 }
 
-func (p *Parser) eatBracedQuantifier() (struct {
-	min int
-	max int
-}, bool) {
+func (p *Parser) eatBracedQuantifier() bool {
 	start := p.lexer.I
-	min := 0
-	max := math.MaxInt
 	if p.lexer.Eat(unicode_consts.LeftCurlyBracket) {
+		p.state.lastMinValue = 0
+		p.state.lastMaxValue = math.MaxInt
 		if digit := p.eatDecimalDigits(); digit != -1 {
-			min = digit
-			max = digit
+			p.state.lastMinValue = digit
+			p.state.lastMaxValue = digit
 			if p.lexer.Eat(unicode_consts.Comma) {
 				if secondDigit := p.eatDecimalDigits(); secondDigit != -1 {
-					max = secondDigit
+					p.state.lastMaxValue = secondDigit
 				}
 			}
 			if p.lexer.Eat(unicode_consts.RightCurlyBracket) {
-				return (struct {
-					min int
-					max int
-				}{min: min, max: max}), true
+				return true
 			}
 			p.raise("Imcomplete Quantifier")
 			p.lexer.Rwind(start)
 		}
 	}
-	return struct {
-		min int
-		max int
-	}{}, false
+	return false
 }
 
 //------------------------------------------------------------------------------
