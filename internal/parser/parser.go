@@ -369,9 +369,35 @@ func (p *Parser) consumeCharacterClass() bool {
 	return false
 }
 
-func (p *Parser) onCharacterClassEnter(start int, negate bool) {}
+func (p *Parser) onCharacterClassEnter(start int, negate bool) {
+	switch parent := p.node.(type) {
+	case *regexp_ast.Alternative:
+		node := &regexp_ast.CharacterClass{
+			Parent: parent,
+			Loc: regexp_ast.Loc{
+				Start: start,
+				End: -1,
+			},
+			Negate: negate,
+			Elements: []regexp_ast.CharacterClassElement{},
+		}
+		p.node = node
+		parent.Elements = append(parent.Elements, node)
+	default:
+		p.raise("The parent of CharacterClass must be Alternative")
+	}
+}
 
-func (p *Parser) onCharacterClassLeave(start int, end int, negate bool) {}
+func (p *Parser) onCharacterClassLeave(start int, end int, negate bool) {
+	node := p.node
+	if cc, ok := node.(*regexp_ast.CharacterClass); ok {
+		if alt, ok := cc.Parent.(*regexp_ast.Alternative); ok {
+			cc.Loc.End = end
+			p.node = alt
+		}
+	}
+	p.raise("UnknownError")
+}
 
 // ------------------------------------------------------------------------------
 // ( GroupSpecifier Disjunction )

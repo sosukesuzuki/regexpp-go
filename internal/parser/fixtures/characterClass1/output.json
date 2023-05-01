@@ -1,0 +1,23 @@
+{
+  "Loc": {
+    "Start": 0,
+    "End": 1
+  },
+  "Alternatives": [
+    {
+      "Elements": [
+        {
+          "Loc": {
+            "Start": 0,
+            "End": 1
+          },
+          "Value": 97
+        }
+      ],
+      "Loc": {
+        "Start": 0,
+        "End": 1
+      }
+    }
+  ]
+}
